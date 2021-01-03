@@ -1,0 +1,17 @@
+// LexAutomat
+digraph {
+	<state.State object at 0x031F9E38> [label=""]
+	<state.State object at 0x03056178> [label=""]
+	<state.State object at 0x03056148> [label=""]
+	<state.State object at 0x030560B8> [label=""]
+	<state.State object at 0x030560E8> [label=""]
+	<state.State object at 0x031F9FA0> [label="" color=blue style=filled]
+	<state.State object at 0x03056118> [label=""]
+	<state.State object at 0x031F9E38> -> <state.State object at 0x03056178> [label=k]
+	<state.State object at 0x03056178> -> <state.State object at 0x03056148> [label=a]
+	<state.State object at 0x03056148> -> <state.State object at 0x030560B8> [label=t]
+	<state.State object at 0x030560B8> -> <state.State object at 0x030560E8> [label=e]
+	<state.State object at 0x030560E8> -> <state.State object at 0x031F9FA0> [label=r]
+	<state.State object at 0x030560B8> -> <state.State object at 0x03056118> [label=z]
+	<state.State object at 0x03056118> -> <state.State object at 0x031F9FA0> [label=e]
+}

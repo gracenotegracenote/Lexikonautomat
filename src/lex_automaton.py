@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from typing import List
-
+import graphviz
 from state import State
 
 
@@ -32,13 +32,24 @@ class LexAutomaton:
         self.replace_or_register(self.trie)
         return self
 
-    def word_exists(self, word: str):
+    def word_exists(self, word: str) -> bool:
         """
         Searches provided word in the lexical automaton.
         :param word: word to search for
         :return: true if the word could be found
         """
-        return False
+        current_state = self.trie
+        for i in range(len(word)):
+            symbol = word[i]
+            if symbol not in current_state.children:
+                return False
+
+            current_state = current_state.children[symbol]
+
+            if i == len(word) - 1 and not current_state.final:
+                return False
+
+        return True
 
     def get_language(self, state: State = None, words: List[str] = None, current_word: str = ''):
         """
@@ -48,15 +59,44 @@ class LexAutomaton:
         :param current_word: current word (needed as variable while searching)
         :return: list of words
         """
-        return []
+        if words is None:
+            words = set()
+        if state is None:
+            state = self.trie
+        char_index = 0
+        for symbol in state.children:
+            if char_index != 0:
+                current_word = current_word[0: len(current_word) - 1]
+            current_word += symbol
+            child = state.children[symbol]
+            char_index += 1
+            if child.final:
+                words.add(current_word)
+            if len(child.children) == 0:
+                current_word = ''
+            words = self.get_language(child, words, current_word)
+        return words
 
-    def draw(self, file_path: str):
+    def draw(self, file_path):
         """
         Creates a graph from the lexical automaton and saves it in PDF format.
         :param file_path: file path of file to save graph in
         :return: None
         """
-        print("Graph created.")
+        dot = graphviz.Digraph(comment='LexAutomat')
+
+        states, edges = self.get_states_and_edges()
+
+        for state in states:
+            if state.final:
+                dot.node(str(state), label='', style='filled', color='blue')
+            else:
+                dot.node(str(state), label='')
+
+        for parent, symbol, child in edges:
+            dot.edge(str(parent), str(child), symbol)
+
+        dot.render(file_path, view=True)
 
     def add_word(self, word, prev_word: str = None, online: bool = True):
         """
@@ -132,3 +172,29 @@ class LexAutomaton:
 
     def add_to_register(self, child: State) -> None:
         print("Adding to register.")
+
+    def get_states_and_edges(self, state=None, states=None, edges=None):
+        """
+        Searches all states and edges of the lexical automaton.
+        :param state: state to begin with
+        :param states: states found already
+        :param edges: edges found already
+        :return: list of states and list of edges
+        """
+        if state is None:
+            state = self.trie
+        if states is None:
+            states = []
+        if edges is None:
+            edges = []
+
+        if state in states:
+            return states, edges
+        states.append(state)
+        for symbol in state.children:
+            child = state.children[symbol]
+            edges.append((state, symbol, child))
+            if child not in states:
+                states, edges = self.get_states_and_edges(state=child, states=states, edges=edges)
+
+        return states, edges
