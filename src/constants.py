@@ -1,4 +1,7 @@
-WORD_LIST_PATH = 'wordlists/wordlist_test.txt'
+WORD_LIST_PATH_1 = 'wordlists/wordlist.txt'
+WORD_LIST_PATH_2 = 'wordlists/wordlist_100.txt'
+WORD_LIST_PATH_3 = 'wordlists/wordlist_p227.txt'
+WORD_LIST_PATH_4 = 'wordlists/wordlist_test.txt'
 
 MAIN_MENU = 'Was moechtest du tun?\n' \
             '   (1) Wort abfragen\n' \

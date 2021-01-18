@@ -14,14 +14,14 @@ class State:
     def has_children(self):
         return bool(self.children)
 
-    def add_child(self, child, symbol):
+    def add_child(self, child, label):
         """
         Adds child to the state.
         :param child: child to add
-        :param symbol: symbol to add
+        :param label: symbol to add
         :return: None
         """
-        self.children[symbol] = child
+        self.children[label] = child
         child.parents.append(self)
 
     def hash(self, hashed_states=None):

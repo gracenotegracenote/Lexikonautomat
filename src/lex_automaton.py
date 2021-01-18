@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import os
 from typing import List
+
 import graphviz
+
 from state import State
 
 
@@ -11,11 +13,11 @@ class LexAutomaton:
         """
         Constructor of lexical automaton.
         """
-        # init register which saves states by hash value
-        self.register = {}
-
         # init root state
         self.trie = State(False)
+
+        # init register which saves states by hash value
+        self.register = {self.trie}
 
     def build(self, words: List[str]) -> LexAutomaton:
         # add words to the automaton
@@ -30,6 +32,7 @@ class LexAutomaton:
             previous_word = current_word
 
         self.replace_or_register(self.trie)
+
         return self
 
     def word_exists(self, word: str) -> bool:
@@ -129,7 +132,25 @@ class LexAutomaton:
         :param state2:
         :return:
         """
-        return False
+
+        # 1.
+        if state1.final != state2.final:
+            return False
+
+        # 2.
+        if len(state1.children) != len(state2.children):
+            return False
+
+        for label in state1.children:
+            # 3.
+            if label not in state2.children:
+                return False
+
+            # 4.
+            if self.get_right_languages(state1) != self.get_right_languages(state2):
+                return False
+
+        return True
 
     def get_common_prefix(self, current_word, previus_word) -> str:
         return os.path.commonprefix([current_word, previus_word])
@@ -144,43 +165,38 @@ class LexAutomaton:
         return current_word[len(common_prefix): len(current_word)]
 
     def replace_or_register(self, state: State) -> None:
-        child = self.get_last_child(state)
+        label, child = self.get_last_child(state)
         if child.has_children():
             self.replace_or_register(child)
-        if self.get_from_register(child):
-            self.set_last_child(state, child)
-            self.delete(child)
-        else:
-            self.add_to_register(child)
 
-    def add_suffix(self, last_state: State, current_suffix: str) -> None:
-        print("Add suffix.")
+        for registered_state in self.register:
+            if self.are_equivalent(registered_state, child):
+                state.children[label] = registered_state
+                return
 
-    def get_last_child(self, state: State) -> State:
-        print("Getting last child.")
-        return State(True)
+        self.register.add(child)
 
-    def get_from_register(self, child: State) -> State:
+    def add_suffix(self, state: State, suffix: str) -> None:
+        current_state = state
+        for i in range(len(suffix)):
+            child = State(i == len(suffix) - 1)
+            current_state.add_child(child, suffix[i])
+            current_state = child
+
+    def get_last_child(self, state: State) -> [str, State]:
+        label = list(state.children.keys())[-1]
+        child = state.children[label]
+        return label, child
+
+    def is_in_register(self, child: State) -> State:
         print("Getting state from register.")
         return State(True)
 
-    def set_last_child(self, state: State, last_child: State) -> None:
-        print("Setting last child.")
+    def get_right_languages(self, state: State) -> List[str]:
+        return self.get_language(state=state)
 
-    def delete(self, state: State) -> None:
-        print("Deleting state.")
-
-    def add_to_register(self, child: State) -> None:
-        print("Adding to register.")
-
+    """
     def get_states_and_edges(self, state=None, states=None, edges=None):
-        """
-        Searches all states and edges of the lexical automaton.
-        :param state: state to begin with
-        :param states: states found already
-        :param edges: edges found already
-        :return: list of states and list of edges
-        """
         if state is None:
             state = self.trie
         if states is None:
@@ -196,5 +212,24 @@ class LexAutomaton:
             edges.append((state, symbol, child))
             if child not in states:
                 states, edges = self.get_states_and_edges(state=child, states=states, edges=edges)
+
+        return states, edges
+    """
+
+    def get_states_and_edges(self):
+        """
+        Searches all states and edges of the lexical automaton.
+        :param state: state to begin with
+        :param states: states found already
+        :param edges: edges found already
+        :return: list of states and list of edges
+        """
+        states = []
+        edges = []
+
+        for state in self.register:
+            states.append(state)
+            for label in state.children:
+                edges.append((state, label, state.children[label]))
 
         return states, edges

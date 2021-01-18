@@ -1,9 +1,9 @@
 import constants as c
-from lex_automaton import LexAutomaton
 import helper
+from lex_automaton import LexAutomaton
 
 # read words and sort them lexicographically
-words = helper.read_words_from_file(c.WORD_LIST_PATH, '\n')
+words = helper.read_words_from_file(c.WORD_LIST_PATH_2, '\n')
 words.sort()
 
 # build lexicon automaton
