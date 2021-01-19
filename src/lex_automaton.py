@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import List
+from typing import List, Set
 
 import graphviz
 
@@ -26,7 +26,7 @@ class LexAutomaton:
             common_prefix = self.get_common_prefix(current_word, previous_word)
             last_state = self.get_last_state(common_prefix)
             current_suffix = self.get_current_suffix(current_word, common_prefix)
-            if last_state.has_children():
+            if len(last_state.children) > 0:
                 self.replace_or_register(last_state)
             self.add_suffix(last_state, current_suffix)
             previous_word = current_word
@@ -54,30 +54,45 @@ class LexAutomaton:
 
         return True
 
+    """
     def get_language(self, state: State = None, words: List[str] = None, current_word: str = ''):
-        """
-        Searches for all words coded in the lexical automaton.
-        :param state: state to begin the search from
-        :param words: words already found
-        :param current_word: current word (needed as variable while searching)
-        :return: list of words
-        """
         if words is None:
             words = set()
         if state is None:
             state = self.trie
         char_index = 0
-        for symbol in state.children:
+        for label in state.children:
             if char_index != 0:
                 current_word = current_word[0: len(current_word) - 1]
-            current_word += symbol
-            child = state.children[symbol]
+            current_word += label
+            child = state.children[label]
             char_index += 1
             if child.final:
                 words.add(current_word)
             if len(child.children) == 0:
                 current_word = ''
             words = self.get_language(child, words, current_word)
+        return words
+    """
+
+    def get_language(self, state: State = None, words: Set[str] = None, current_word: str = ''):
+        if words is None:
+            words = set()
+        if state is None:
+            state = self.trie
+
+        child_index = 0
+        for label in state.children:
+            if child_index > 0:
+                current_word = current_word[0: len(current_word) - 1]
+            current_word += label
+            child = state.children[label]
+            if child.final:
+                words.add(current_word)
+            if len(child.children) > 0:
+                words = self.get_language(child, words, current_word)
+            child_index += 1
+
         return words
 
     def draw(self, file_path):
@@ -166,7 +181,7 @@ class LexAutomaton:
 
     def replace_or_register(self, state: State) -> None:
         label, child = self.get_last_child(state)
-        if child.has_children():
+        if len(child.children) > 0:
             self.replace_or_register(child)
 
         for registered_state in self.register:

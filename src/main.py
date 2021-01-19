@@ -55,8 +55,7 @@ def word_search_option(word):
     """
     print(c.SEARCH_IN_PROGRESS_MESSAGE % word)
     exists = automaton.word_exists(word)
-    message = c.WORD_FOUND_MESSAGE % word if exists \
-        else c.WORD_NOT_FOUND_MESSAGE % word
+    message = c.WORD_FOUND_MESSAGE % word if exists else c.WORD_NOT_FOUND_MESSAGE % word
     print(message)
     new_word = input(c.SEARCH_AGAIN_MESSAGE)
     if new_word == c.OPTION_0:

@@ -17,8 +17,35 @@ class TestLexAutomaton(TestCase):
     def test_get_language(self):
         self.assertCountEqual(self.automaton.get_language(), self.language)
 
-    # def test_draw(self):
-    # self.automaton.draw('test_draw_automaton.gv')
+    def test_get_language_of_12_words(self):
+        words = ['aa', 'aaa', 'aaba', 'aabbb', 'abaa', 'ababb', 'abbab', 'baa', 'babb', 'bbaa', 'bbabb', 'bbbab']
+        words.sort()
+        words_set = sorted(set(words))
+
+        automaton_of_100_words = LexAutomaton().build(words)
+        language = sorted(automaton_of_100_words.get_language())
+        self.assertCountEqual(language, words_set)
+
+    def test_get_language_of_100_words(self):
+        words = ['ABC', 'ABCs', 'AIDS', 'Aa', 'Aachener', 'Aachenerin', 'Aachenerinnen', 'Aachenern', 'Aacheners',
+                 'Aaden', 'Aak', 'Aake', 'Aaken', 'Aakerbeere', 'Aakerbeeren', 'Aakes', 'Aaks', 'Aal', 'Aalbaum',
+                 'Aalbaume', 'Aalbaumes', 'Aalbaums', 'Aalbeere', 'Aalbeeren', 'Aalbeerstrauch', 'Aalbeerstrauche',
+                 'Aalbeerstrauches', 'Aalbeersträucher', 'Aalbeersträuchern', 'Aalbestand', 'Aalbestande',
+                 'Aalbestandes', 'Aalbestands', 'Aalbestände', 'Aalbeständen', 'Aalbricke', 'Aalbricken', 'Aalbutt',
+                 'Aalbutte', 'Aalbutten', 'Aalbuttes', 'Aalbutts', 'Aalbäume', 'Aalbäumen', 'Aale', 'Aaleidechse',
+                 'Aaleidechsen', 'Aaleisen', 'Aaleisens', 'Aalen', 'Aalener', 'Aalenern', 'Aaleners', 'Aalenium',
+                 'Aaleniums', 'Aalens', 'Aales', 'Aalfang', 'Aalfange', 'Aalfanges', 'Aalfangs', 'Aalfett', 'Aalfette',
+                 'Aalfetten', 'Aalfettes', 'Aalfetts', 'Aalfischer', 'Aalfischerei', 'Aalfischereien', 'Aalfischern',
+                 'Aalfischers', 'Aalfänge', 'Aalfängen', 'Aalgabel', 'Aalgabeln', 'Aalhamen', 'Aalhamens', 'Aalhaut',
+                 'Aalhäute', 'Aalhäuten', 'Aalkasten', 'Aalkastens', 'Aalkorb', 'Aalkorbe', 'Aalkorbes', 'Aalkorbs',
+                 'Aalkrähen', 'Aalkästen', 'Aalkörbe', 'Aalkörben', 'Aalleiter', 'Aalleitern', 'Aalmolch', 'Aalmolche',
+                 'Aalmolchen', 'Aalmolches', 'Aalmolchs', 'Aalmutter', 'Aalmuttern', 'Aalmöwe']
+        words.sort()
+        words_set = sorted(set(words))
+
+        automaton_of_100_words = LexAutomaton().build(words)
+        language = sorted(automaton_of_100_words.get_language())
+        self.assertCountEqual(language, words_set)
 
     """
     def test_add_word(self):

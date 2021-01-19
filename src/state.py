@@ -12,7 +12,7 @@ class State:
         self.string_value = ''
 
     def has_children(self):
-        return bool(self.children)
+        return len(self.children) > 0
 
     def add_child(self, child, label):
         """
