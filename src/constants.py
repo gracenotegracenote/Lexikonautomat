@@ -6,9 +6,9 @@ WORD_LIST_PATH_4 = 'wordlists/wordlist_test.txt'
 MAIN_MENU = 'Was moechtest du tun?\n' \
             '   (1) Wort abfragen\n' \
             '   (2) Automatensprache anzeigen\n' \
-            '   (3) Automat zeichnen\n' \
-            '   (4) Wort hinzufuegen\n' \
-            '   (5) Wort loeschen\n' \
+            '   (3) Automaten zeichnen\n' \
+            '   (4) Automaten speichern\n' \
+            '   (5) Automaten aus der Datei laden\n' \
             '   (0) Abbrechen\n' \
             'Bitte eingeben >>> '
 
@@ -27,10 +27,6 @@ INVALID_WORD_MESSAGE = 'Ungueltiges Wort: \"%s\" enthaelt ein Leerzeichen. Es ko
 
 SEARCH_WORD_MESSAGE = 'Geben Sie das Wort ein, nach dem in dem Lexikonautomat gesucht werden soll >>> '
 
-ADD_WORD_MESSAGE = 'Geben Sie das Wort ein, das in den Lexikonautomat hinzugefuegt werden soll >>> '
-
-REMOVE_WORD_MESSAGE = 'Geben Sie das Wort ein, das aus dem Lexikonautomat geloescht werden soll >>> '
-
 SEARCH_IN_PROGRESS_MESSAGE = 'Ich suche nach dem Wort \'%s\'...'
 
 WORD_FOUND_MESSAGE = 'Das Wort \'%s\' konnte gefunden werden!'
@@ -41,25 +37,18 @@ SEARCH_AGAIN_MESSAGE = 'Moechtest du auf ein weiteres Wort suchen? (Waehle 0 um 
 
 AUTOMATON_LANGUAGE_MESSAGE = 'Der Lexikonautomat besteht aus folgenden Woertern:'
 
-DRAW_IN_PROGRESS_MESSAGE = 'Ich zeichne den Lexikonautomat...'
+DRAW_IN_PROGRESS_MESSAGE = 'Ich zeichne den Lexikonautomaten...'
 
 DRAW_FILE_PATH = 'automaton.gv'
 
-DRAW_FINISHED_MESSAGE = 'Fertig! Du findest die Zeichnung unter %s und %s.pdf.'
+DRAW_FINISHED_MESSAGE = 'Fertig! Du findest die Zeichnung unter \'%s\' und \'%s.pdf\'.'
 
-CANNOT_ADD_WORD_MESSAGE = 'Das Wort \'%s\' ist in dem Lexikonautomat schon enthalten. ' \
-                          'Waehle ein anderes Wort. (Waehle 0 um zu Hauptmenu zu gehen) >>> '
+SAVE_FILE_PATH = 'saved_automaton.txt'
 
-ADD_IN_PROGRESS_MESSAGE = 'Ich fuege das Wort \'%s\' zu dem Lexikonautomat hinzu...'
+SAVING_IN_PROGRESS_MESSAGE = "Ich speichere den Lexikonautomaten nach \'%s\'..." % SAVE_FILE_PATH
 
-WORD_ADDED_MESSAGE = 'Das Wort \'%s\' ist erfolgreich hinzugefuegt!'
+SAVING_FINISHED_MESSAGE = "Fertig! Du findest den abgespeicherten Automaten unter \'%s\'." % SAVE_FILE_PATH
 
-ADD_AGAIN_MESSAGE = 'Moechtest du ein weiteres Wort hinzufuegen? (Waehle 0 um zu Hauptmenu zu gehen) >>> '
+LOADING_IN_PROGRESS_MESSAGE = "Ich lade den Lexikonautomaten aus \'%s\'..." % SAVE_FILE_PATH
 
-CANNOT_REMOVE_WORD_MESSAGE = 'Das Wort \'%s\' ist nicht in dem Automat enthalten. Waehle ein anderes Wort >>> '
-
-REMOVE_IN_PROGRESS_MESSAGE = 'Ich loesche das Wort \'%s\' aus dem Lexikonautomat...'
-
-WORD_REMOVED_MESSAGE = 'Das Wort \'%s\' ist erfolgreich geloescht!'
-
-REMOVE_AGAIN_MESSAGE = 'Moechtest du ein weiteres Wort loeschen? (Waehle 0 um zu Hauptmenu zu gehen) >>> '
+LOADING_FINISHED_MESSAGE = "Fertig! Der Automat wurde aus \'%s\' erfolgreich geladen." % SAVE_FILE_PATH

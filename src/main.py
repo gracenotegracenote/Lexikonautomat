@@ -2,12 +2,28 @@ import constants as c
 import helper
 from lex_automaton import LexAutomaton
 
-# read words and sort them lexicographically
-words = helper.read_words_from_file(c.WORD_LIST_PATH_2, '\n')
-words.sort()
+automaton = LexAutomaton()
 
-# build lexicon automaton
-automaton = LexAutomaton().build(words)
+
+def start_question_menu():
+    start_question = input("Moechtest du den Lexikonautomaten (1) aus der Wortliste erstellen oder (2) "
+                           "aus der Datei laden?\n Bitte \"1\" oder \"2\" eingeben. >>> ")
+    while start_question not in ["1", "2"]:
+        start_question = input("Falsches Input. Das Programm wird beendet.")
+        exit(0)
+
+    if start_question == '1':
+        # read words and sort them lexicographically
+        words = helper.read_words_from_file(c.WORD_LIST_PATH_4, '\n')
+        words.sort()
+
+        # build lexicon automaton
+        automaton.build(words)
+        print("Der Lexikonautomat wurde aus der Wortliste erfolgreich geladen.")
+    else:
+        load_automaton_option()
+
+    main_menu()
 
 
 def main_menu():
@@ -37,13 +53,11 @@ def main_menu():
         return
 
     if option == c.OPTION_4:
-        word = input(c.ADD_WORD_MESSAGE)
-        add_word_option(word)
+        save_automaton_option()
         return
 
     if option == c.OPTION_5:
-        word = input(c.REMOVE_WORD_MESSAGE)
-        remove_word_option(word)
+        load_automaton_option()
         return
 
 
@@ -87,54 +101,27 @@ def draw_automaton_option():
     main_menu()
 
 
-def add_word_option(word):
+def save_automaton_option():
     """
-    Prints add word option in the console.
-    :param word: word to add
+    Prints draw automaton option in the console.
     :return: None
     """
-    exists = automaton.word_exists(word)
-    if exists:
-        new_word = input(c.CANNOT_ADD_WORD_MESSAGE % word)
-        if new_word == c.OPTION_0:
-            main_menu()
-        else:
-            add_word_option(new_word)
-    else:
-        print(c.ADD_IN_PROGRESS_MESSAGE % word)
-    automaton.add_word(word, '', True)
-    print(c.WORD_ADDED_MESSAGE % word)
-    new_word = input(c.ADD_AGAIN_MESSAGE)
-    if new_word == '0':
-        main_menu()
-    else:
-        add_word_option(new_word)
+    print(c.SAVING_IN_PROGRESS_MESSAGE)
+    automaton.save(c.SAVE_FILE_PATH)
+    print(c.SAVING_FINISHED_MESSAGE)
+    main_menu()
 
 
-def remove_word_option(word):
+def load_automaton_option():
     """
-    Prints remove word option in the console.
-    :param word: word to remove
+    Prints draw automaton option in the console.
     :return: None
     """
-    exists = automaton.word_exists(word)
-    if not exists:
-        new_word = input(c.CANNOT_REMOVE_WORD_MESSAGE % word)
-        if new_word == c.OPTION_0:
-            main_menu()
-        else:
-            remove_word_option(new_word)
-    else:
-        print(c.REMOVE_IN_PROGRESS_MESSAGE % word)
-        automaton.remove_word(word)
-        print(c.WORD_REMOVED_MESSAGE % word)
-
-    new_word = input(c.REMOVE_AGAIN_MESSAGE)
-    if new_word == c.OPTION_0:
-        main_menu()
-    else:
-        remove_word_option(new_word)
+    print(c.LOADING_IN_PROGRESS_MESSAGE)
+    automaton.load(c.SAVE_FILE_PATH)
+    print(c.LOADING_FINISHED_MESSAGE)
+    main_menu()
 
 
-# call main menu
-main_menu()
+# call menu
+start_question_menu()

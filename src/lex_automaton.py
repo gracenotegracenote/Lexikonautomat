@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import pickle
 from typing import List, Set
 
 import graphviz
@@ -16,7 +17,7 @@ class LexAutomaton:
         # init root state
         self.trie = State(False)
 
-        # init register which saves states by hash value
+        # init register
         self.register = {self.trie}
 
     def build(self, words: List[str]) -> LexAutomaton:
@@ -54,28 +55,14 @@ class LexAutomaton:
 
         return True
 
-    """
-    def get_language(self, state: State = None, words: List[str] = None, current_word: str = ''):
-        if words is None:
-            words = set()
-        if state is None:
-            state = self.trie
-        char_index = 0
-        for label in state.children:
-            if char_index != 0:
-                current_word = current_word[0: len(current_word) - 1]
-            current_word += label
-            child = state.children[label]
-            char_index += 1
-            if child.final:
-                words.add(current_word)
-            if len(child.children) == 0:
-                current_word = ''
-            words = self.get_language(child, words, current_word)
-        return words
-    """
-
     def get_language(self, state: State = None, words: Set[str] = None, current_word: str = ''):
+        """
+        Searches for all words coded in the lexical automaton.
+        :param state: state to begin the search from
+        :param words: words already found
+        :param current_word: current word (needed as variable while searching)
+        :return: list of words
+        """
         if words is None:
             words = set()
         if state is None:
@@ -115,24 +102,6 @@ class LexAutomaton:
             dot.edge(str(parent), str(child), symbol)
 
         dot.render(file_path, view=True)
-
-    def add_word(self, word, prev_word: str = None, online: bool = True):
-        """
-        Adds one word to the lexical automaton.
-        :param word: word to add
-        :param prev_word: word which was added previously (needed when adding words "offline")
-        :param online: true when adding words "online"
-        :return: None
-        """
-        print("New word added.")
-
-    def remove_word(self, word: str) -> None:
-        """
-        Removes provided word from the lexical automaton.
-        :param word: word to remove
-        :return: None
-        """
-        print("Word removed.")
 
     def are_equivalent(self, state1: State, state2: State) -> bool:
         """
@@ -203,33 +172,8 @@ class LexAutomaton:
         child = state.children[label]
         return label, child
 
-    def is_in_register(self, child: State) -> State:
-        print("Getting state from register.")
-        return State(True)
-
     def get_right_languages(self, state: State) -> List[str]:
         return self.get_language(state=state)
-
-    """
-    def get_states_and_edges(self, state=None, states=None, edges=None):
-        if state is None:
-            state = self.trie
-        if states is None:
-            states = []
-        if edges is None:
-            edges = []
-
-        if state in states:
-            return states, edges
-        states.append(state)
-        for symbol in state.children:
-            child = state.children[symbol]
-            edges.append((state, symbol, child))
-            if child not in states:
-                states, edges = self.get_states_and_edges(state=child, states=states, edges=edges)
-
-        return states, edges
-    """
 
     def get_states_and_edges(self):
         """
@@ -248,3 +192,13 @@ class LexAutomaton:
                 edges.append((state, label, state.children[label]))
 
         return states, edges
+
+    def save(self, file_path):
+        with open(file_path, 'wb') as output:
+            pickle.dump(self.trie, output, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(self.register, output, pickle.HIGHEST_PROTOCOL)
+
+    def load(self, file_path):
+        with open(file_path, 'rb') as file:
+            self.trie = pickle.load(file)
+            self.register = pickle.load(file)
