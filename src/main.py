@@ -14,7 +14,7 @@ def start_question_menu():
 
     if start_question == '1':
         # read words and sort them lexicographically
-        words = helper.read_words_from_file(c.WORD_LIST_PATH_4, '\n')
+        words = helper.read_words_from_file(c.WORD_LIST_PATH_2, '\n')   # <-- HIER DATEIPFAD EINGEBEN
         words.sort()
 
         # build lexicon automaton
